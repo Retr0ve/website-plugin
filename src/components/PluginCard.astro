@@ -1,0 +1,136 @@
+---
+export interface Props {
+	title: string,
+	body: string,
+	id: string,
+	categories: string[],
+	recommended: boolean,
+}
+const { id, title, body, categories, recommended } = Astro.props;
+---
+
+<li class="link-card">
+	<a href={`plugin/${id}`} target="_blank">
+		<h5 class="plugin-title pb-2">
+			<span class="fa-regular fa-window-maximize"></span>
+			{title}
+		</h5>
+		<div class="pb-2">
+		{ recommended ? <span class="plugin-recommended me-2 badge text-black">Recommended</span>:<></>}
+		{categories.map(category => (
+			<span class="plugin-category me-2 badge bg-secondary">{category}</span>
+		))}
+		</div>
+
+		<p class="plugin-description">
+			{body}
+		</p>
+		
+		<p class="plugin-link">
+			See More <span class="plugin-link-arrow">&rarr;</span>
+		</p>
+	</a>
+</li>
+<style>
+	:root {
+
+	}
+
+	.link-card {
+		list-style: none;
+		display: flex;
+		padding: 0.15rem;
+		background-image: linear-gradient(45deg, #3da8ff, #6614ff 30%, #d4d4d4 60%);;
+		background-size: 400%;
+		border-radius: 0.5rem;
+		background-position: 100%;
+		min-height: 200px;
+		position: relative;
+		/* transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1); */
+	}
+
+	.link-card>a {
+		width: 100%;
+		text-decoration: none;
+		line-height: 1.4;
+		padding: 1em 1.3em;
+		border-radius: 0.35rem;
+		color: var(--text-color);
+		background-color: white;
+		opacity: 0.8;
+	}
+
+	h5 {
+		margin: 0;
+		transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	p {
+		margin-top: 0.75rem;
+		margin-bottom: 0;
+	}
+
+	/* h5 span {
+		display: inline-block;
+		transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+	} */
+
+	.link-card:is(:hover, :focus-within) {
+		background-position: 0;
+	}
+
+	/* .link-card:is(:hover, :focus-within) h5 {
+		color: #154cff;
+	} */
+
+	.link-card:is(:hover, :focus-within) .plugin-link-arrow {
+		transform: translateX(2px);
+	}
+
+	.plugin-description {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+	}
+
+	.plugin-title{
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.plugin-category{
+		text-transform: capitalize;
+		margin-top: -4px;
+	}
+
+	.plugin-recommended{
+		text-transform: capitalize;
+		margin-top: -4px;
+		background-color: rgb(255, 217, 47);
+	}
+
+	.plugin-link{
+		position: absolute;
+		bottom: 1em;
+		left: 1.3em;
+		right: 0;
+		margin: 0;
+
+	}
+
+	.plugin-link-arrow{
+		display: inline-block;
+		transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	/* .plugin-link-arrow:is(:hover, :focus-within){
+		transform: translateX(2px);
+	} */
+
+	/* h5 span {
+		display: inline-block;
+		transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+	} */
+</style>
