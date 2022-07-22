@@ -15,6 +15,7 @@ function loadData(){
   return data;
 }
 
+
 function loadTemplate(){
   const templateFiles = klawSync('./pages', {nodir: true});
   return templateFiles.map(file => {
