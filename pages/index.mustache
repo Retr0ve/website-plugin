@@ -137,7 +137,8 @@
 									{{^plugins}}
 										<div class="py-5">
 											<p class="text-center"><span class="fa-solid fa-box-open fa-6x text-muted"></span></p>
-											<h4 class="text-muted text-center">Oops... There are no plugins under this category.</h4> 
+											<br/>
+											<h5 class="text-muted text-center">Oops... There are no plugins under this category.</h5> 
 										</div>
 									{{/plugins}}
 								</div>
@@ -155,7 +156,14 @@
 
 <script>
   function openTab() {
-    const triggerFirstTabEl = document.querySelector('#nav-tab :first-child')
-    bootstrap.Tab.getInstance(triggerFirstTabEl).show() // Select All Tab
+    const triggerFirstTabEleList = document.querySelectorAll('#nav-tab :first-child')
+		for (let i = 0; i < triggerFirstTabEleList.length; i++) {
+			bootstrap.Tab.getInstance(triggerFirstTabEleList[i]).show() // Select All Tab
+		}
   }
+	window.addEventListener('resize', function(){
+		if (window.innerWidth < 992) {
+			openTab()
+		}
+	})
 </script>
