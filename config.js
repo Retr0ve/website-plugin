@@ -16,6 +16,4 @@ const config = {
     site: ''
   },
 }
-module.exports = () => {
-  return config[config.mode];
-}
+module.exports = config[config.mode];
