@@ -1,16 +1,34 @@
 async function fetchPluginData() {
-  // const plugins =  await fetch('https://raw.githubusercontent.com/joplin/plugins/master/manifests.json').then(res => res.json());
-  // const plugins =  await fetch('https://raw.staticdn.net/joplin/plugins/master/manifests.json').then(res => res.json());
-  const plugins =  await fetch('https://raw.fastgit.org/joplin/plugins/master/manifests.json').then(res => res.json());
-
+  let plugins = [];
+  const mirrors = [
+    'https://raw.githubusercontent.com/joplin/plugins/master/manifests.json',
+    'https://raw.staticdn.net/joplin/plugins/master/manifests.json',
+    'https://raw.fastgit.org/joplin/plugins/master/manifests.json'
+  ]
+  for (let index = 0; index < mirrors.length; index++) {
+    try {
+      plugins =  await fetch(mirrors[index]).then(res => res.json());
+    } catch (error) {
+      continue;
+    }
+  }
   return plugins;
 }
 
 async function fetchStatsData(){
-  // const stats = await fetch('https://raw.githubusercontent.com/joplin/plugins/master/stats.json').then(res => res.json());
-  // const stats = await fetch('https://raw.staticdn.net/joplin/plugins/master/stats.json').then(res => res.json());
-  const stats = await fetch('https://raw.fastgit.org/joplin/plugins/master/stats.json').then(res => res.json());
-
+  let stats;
+  const mirrors = [
+    'https://raw.githubusercontent.com/joplin/plugins/master/stats.json',
+    'https://raw.staticdn.net/joplin/plugins/master/stats.json',
+    'https://raw.fastgit.org/joplin/plugins/master/stats.json'
+  ]
+  for (let index = 0; index < mirrors.length; index++) {
+    try {
+      stats =  await fetch(mirrors[index]).then(res => res.json());
+    } catch (error) {
+      continue;
+    }
+  }
   return stats;
 }
 
