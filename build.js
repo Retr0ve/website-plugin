@@ -1,4 +1,5 @@
 const fs = require("fs-extra");
+const path = require("path");
 const generateHTMLs = require("./utils/generateHTMLs.js");
 const config = require("./config.js");
 const pluginsData = require("./data/plugins.js");
@@ -29,9 +30,11 @@ function copyData(buildPath, data){
 }
 
 (async function() {
-  clearBuildPath(config.distDir);
-  copyStaticFiles(config.distDir);
+  const buildPath = path.resolve(config.distDir);
+  fs.ensureDirSync(buildPath);
+  clearBuildPath(buildPath);
+  copyStaticFiles(buildPath);
   // Copy plugins data to build path
-  copyData(config.distDir, await pluginsData());
+  copyData(buildPath, await pluginsData());
   generateHTMLs();
 })();
