@@ -17,6 +17,13 @@
   left: 0px;
 }
 
+.search-modal-icon {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+  left: 12px;
+}
+
 .search-input {
   padding-left: 30px;
 }
