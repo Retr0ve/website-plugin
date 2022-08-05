@@ -32,25 +32,24 @@ async function fetchStatsData(){
   return stats;
 }
 
-async function getTrendingPlugins(plugins, stats, topn){
+async function getTrendingPlugins(plugins, topn){
+  const period = 'last-week';
+
   let result = [];
-  for (const plugin in stats) {
-    if (Object.prototype.hasOwnProperty.call(stats, plugin)) {
-      const versions = Object.values(stats[plugin]);
-      const downloadCount = versions[versions.length - 1].downloadCount;
-      const createdAt = new Date(versions[versions.length - 1].createdAt);
-      const popularity = downloadCount / (Date.now() - createdAt)
-      result.push({
-        id: plugin,
-        popularity: popularity
-      });
-    }
+  for (const pluginId in plugins) {
+    const package = plugins[pluginId]._npm_package_name;
+    const downloadStat = await fetch(`https://api.npmjs.org/downloads/point/${period}/${package}`).then(res => res.json());
+    console.log(package, downloadStat.downloads);
+    result.push({
+      id: pluginId,
+      downloadCount: downloadStat.downloads
+    });
   }
 
-  return result.sort((a, b) => b.popularity - a.popularity).slice(0, topn).map((item) => {
+  return result.sort((a, b) => b.downloadCount - a.downloadCount).slice(0, topn).map((item) => {
     return {
       id: item.id,
-      popularity: item.popularity,
+      downloadCount: item.downloadCount,
       ...plugins[item.id],
     }
   });
@@ -67,7 +66,7 @@ module.exports = async function() {
     },
     all: allPlugins,
     recommended: allPlugins.filter(plugin => plugin._recommended),
-    trending: await getTrendingPlugins(rawPluginsData, await fetchStatsData(), 3),
+    trending: await getTrendingPlugins(rawPluginsData, 3),
   };
   return plugins;
 };
