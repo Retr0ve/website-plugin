@@ -175,6 +175,9 @@
 			</div>
 		</div>
 	</main>
+	{{#plugins.all}}
+		{{> popoverContent}}
+	{{/plugins.all}}
 </body>
 
 </html>
@@ -192,5 +195,33 @@
 		if (window.innerWidth < 992) {
 			openTab('all')
 		}
+	})
+	const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+	popoverTriggerList.forEach(popoverTriggerEl => {
+		const popover = new bootstrap.Popover(popoverTriggerEl, {
+			html : true,
+			content: function() {
+				var content = popoverTriggerEl.getAttribute("data-popover-content");
+				return document.querySelector(content).innerHTML;
+			},
+		})
+		let inPopover = false;
+		popoverTriggerEl.addEventListener('pointerenter', function(e) {
+			popover.show()
+			popover.tip.addEventListener('pointerenter', function(e) {
+				inPopover = true;
+			})
+			popover.tip.addEventListener('pointerleave', function(e) {
+				inPopover = false;
+				popover.hide()
+			})
+		})
+		popoverTriggerEl.addEventListener('pointerleave', function(e) {
+			setTimeout(() => {
+				if (!inPopover) {
+					popover.hide()
+				}
+			}, 100);
+		})
 	})
 </script>

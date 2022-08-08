@@ -137,3 +137,9 @@ p {
 .link-card:is(:hover, :focus-within) .plugin-link-arrow {
   transform: translateX(2px);
 }
+
+.wrap{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

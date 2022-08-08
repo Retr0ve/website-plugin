@@ -32,6 +32,27 @@ async function fetchStatsData(){
   return stats;
 }
 
+async function getData() {
+  const rawPluginsData = await fetchPluginData();
+  const rawStats = await fetchStatsData();
+  const plugins = Object.values(rawPluginsData).map((plugin) => {
+    return {
+      domId: convertToDomId(plugin.id),
+      ...rawStats[plugin.id][plugin.version],
+      ...plugin
+    }
+  });
+  return {
+    rawPluginsData,
+    rawStats,
+    plugins
+  }
+}
+
+function convertToDomId(id) {
+  return id.toLowerCase().replace(/[.]/g, '-' )
+}
+
 async function getTrendingPlugins(plugins, topn){
   const period = 'last-week';
 
@@ -39,7 +60,8 @@ async function getTrendingPlugins(plugins, topn){
   for (const pluginId in plugins) {
     const package = plugins[pluginId]._npm_package_name;
     const downloadStat = await fetch(`https://api.npmjs.org/downloads/point/${period}/${package}`).then(res => res.json());
-    console.log(package, downloadStat.downloads);
+    // console.log(package, downloadStat.downloads);
+    console.log(`Fetching ${package} downloads in ${period}: ${downloadStat.downloads}`);
     result.push({
       id: pluginId,
       downloadCount: downloadStat.downloads
@@ -48,25 +70,22 @@ async function getTrendingPlugins(plugins, topn){
 
   return result.sort((a, b) => b.downloadCount - a.downloadCount).slice(0, topn).map((item) => {
     return {
-      id: item.id,
-      downloadCount: item.downloadCount,
+      domId: convertToDomId(item.id),
       ...plugins[item.id],
     }
   });
 }
 
 module.exports = async function() {
-  const rawPluginsData = await fetchPluginData();
-  const rawStats = await fetchStatsData();
-  const allPlugins = Object.values(rawPluginsData);
+  const data = await getData();
   const plugins = {
     raw: {
-      plugins: rawPluginsData,
-      stats: rawStats
+      plugins: data.rawPluginsData,
+      stats: data.rawStats
     },
-    all: allPlugins,
-    recommended: allPlugins.filter(plugin => plugin._recommended),
-    trending: await getTrendingPlugins(rawPluginsData, 3),
+    all: data.plugins,
+    recommended: data.plugins.filter(plugin => plugin._recommended),
+    trending: await getTrendingPlugins(data.rawPluginsData, 3),
   };
   return plugins;
 };
