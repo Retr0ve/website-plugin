@@ -3,12 +3,12 @@ const config = {
   dev: {
     rootDir: './',
     distDir: './site',
-    site: ''
+    site: '/site'
   },
   demo: {
     rootDir: './',
     distDir: './site',
-    site: 'website-plugin'
+    site: '/website-plugin'
   },
   prod: {
     rootDir: './',
