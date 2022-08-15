@@ -60,7 +60,6 @@ async function getTrendingPlugins(plugins, topn){
   for (const pluginId in plugins) {
     const package = plugins[pluginId]._npm_package_name;
     const downloadStat = await fetch(`https://api.npmjs.org/downloads/point/${period}/${package}`).then(res => res.json());
-    // console.log(package, downloadStat.downloads);
     console.log(`Fetching ${package} downloads in ${period}: ${downloadStat.downloads}`);
     result.push({
       id: pluginId,

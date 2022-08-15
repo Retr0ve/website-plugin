@@ -41,7 +41,9 @@
       </ul>
       <div class="search-field col-12 col-lg-3 mb-3 mb-lg-0 me-lg-3">
 				<i class="fa-solid fa-magnifying-glass search-icon"></i>
-				<input type="text" id="search" class="form-control search-input" data-bs-toggle="modal" data-bs-target="#searchModal" placeholder="Search..." aria-label="Search" autocomplete="off">
+				<form action="/site/search.html" method="get">
+          <input type="search" id="search" name="search" class="form-control search-input" placeholder="Search..." aria-label="Search" autocomplete="off">
+        </form>
       </div>
     </div>
   </div>
@@ -175,9 +177,6 @@
 			</div>
 		</div>
 	</main>
-	{{#plugins.all}}
-		{{> popoverContent}}
-	{{/plugins.all}}
 </body>
 
 </html>
@@ -196,6 +195,7 @@
 			openTab('all')
 		}
 	})
+	/**
 	const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
 	popoverTriggerList.forEach(popoverTriggerEl => {
 		const popover = new bootstrap.Popover(popoverTriggerEl, {
@@ -224,4 +224,5 @@
 			}, 100);
 		})
 	})
+	**/
 </script>

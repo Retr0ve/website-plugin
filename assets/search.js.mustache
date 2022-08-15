@@ -1,0 +1,132 @@
+const plugins = await fetch("{{&site}}/plugins.json").then(res => res.json());
+// const searchBox = document.getElementById('searchBox');
+// const searchModal = document.getElementById('searchModal');
+
+// function resetSearch() {
+//   document.getElementById('searchResult').innerHTML = '';
+// }
+
+function sanitize(str) {
+  return str.replace(/[<>&"]/g, (c) => {return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});
+}
+
+// function search(token) {
+//   let results = [];
+//   resetSearch();
+//   results = plugins.all.filter(plugin => {
+//     if (plugin.keywords){
+//       return plugin.name.toLowerCase().includes(token) || plugin.description.toLowerCase().includes(token) || plugin.author.toLowerCase().includes(token) || plugin.keywords.some(tag => tag.toLowerCase().includes(token));
+//     } else {
+//       return plugin.name.toLowerCase().includes(token) || plugin.description.toLowerCase().includes(token) || plugin.author.toLowerCase().includes(token);
+//     }
+//   });
+
+//   if (results.length > 0) {
+//     document.getElementById('searchResult').innerHTML = results.map(plugin => 
+//       `<div class="card mt-2 mb-2">
+//         <a class="card-body" style="text-decoration: none;" href="{{&site}}/plugin/${plugin.id}">
+//           <h5 class="card-title">${sanitize(plugin.name)}</h5>
+//           <h6 class="card-subtitle mb-2 text-muted">${plugin.author} - ${sanitize
+//             (plugin.description)}</h6>
+//         </a>
+//       </div>`
+//     ).join('');
+//   } else {
+//     document.getElementById('searchResult').innerHTML = 
+//     `<div class="py-5">
+//       <p class="text-center mb-3"><span class="fa-solid fa-box-open fa-4x text-muted"></span></p>
+//       <h5 class="text-muted text-center mb-23">No result</h5> 
+//     </div>`;
+//   }
+// }
+
+
+function createSearchResult(results){
+  const searchResult = document.getElementById('search-result')
+  // const searchHead = document.getElementById('search-head')
+  const searchResultEle = document.createElement('div')
+  searchResultEle.className = 'row'
+
+  if (results.length > 0) {
+    searchResultEle.innerHTML = `<div class="col-12">
+      <h3 class="mb-3">Search Result for '${searchText}'</h3>
+      </div>`
+    for (let i = 0; i < results.length; i++) {
+      const result = results[i]
+      const resultEle = document.createElement('div')
+      let resultBuilder = '';
+      resultEle.className = 'col-md-12 col-lg-4 gx-3 mb-3'
+      
+      resultBuilder = `
+      <li class="link-card">
+        <a href="plugin/${sanitize(result.id)}">
+          <h5 class="plugin-title pb-2">
+            <span class="fa-regular fa-window-maximize"></span>
+              ${sanitize(result.name)}
+          </h5>
+          <div class="pb-2">
+      `
+      if (result._recommended) {
+        resultBuilder += `<span class="plugin-recommended me-2 badge text-black">Recommended</span>`
+      }
+
+      if (result.categories && result.categories.length > 0) {
+        for (let i = 0; i < result.categories.length; i++) {
+          resultBuilder += `<span class="plugin-category me-2 badge bg-secondary">${sanitize(result.categories[i])}</span>`
+        }
+      }
+
+      resultBuilder += `</div>
+          <p class="plugin-description">
+            ${sanitize(result.description)}
+          </p>
+          
+          <p class="plugin-link">
+            See More <span class="plugin-link-arrow">&rarr;</span>
+          </p>
+        </a>
+      </li>
+      `
+
+      resultEle.innerHTML = resultBuilder;
+      searchResultEle.appendChild(resultEle)
+    }
+  } else {
+    searchResultEle.innerHTML = `<div class="col-12">
+      <h3 class="mb-3">Cannot find any plugins for '${searchText}'</h3>
+      </div>`
+  }
+  searchResult.appendChild(searchResultEle)
+}
+
+function search(token) {
+  let results = [];
+  if (!token || token === '') {
+    createSearchResult(results)
+    return;
+  }
+  results = plugins.all.filter(plugin => {
+    if (plugin.keywords){
+      return plugin.name.toLowerCase().includes(token) || plugin.description.toLowerCase().includes(token) || plugin.author.toLowerCase().includes(token) || plugin.keywords.some(tag => tag.toLowerCase().includes(token));
+    } else {
+      return plugin.name.toLowerCase().includes(token) || plugin.description.toLowerCase().includes(token) || plugin.author.toLowerCase().includes(token);
+    }
+  });
+  createSearchResult(results)
+}
+
+function getUrlParameter(name) { 
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null; 
+}
+
+const searchText = getUrlParameter('search') || ''
+search(searchText);
+
+// searchBox.addEventListener('keyup', async function(e) {
+//     search(e.target.value.toLowerCase());
+// })
+
+// // Auto foucus on search box
+// searchModal.addEventListener('shown.bs.modal', () => {
+//   searchBox.focus()
+// })
