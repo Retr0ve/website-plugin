@@ -143,3 +143,15 @@ p {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.horizontal-scroll-wrapper{
+  white-space: nowrap;
+  overflow-x: scroll;
+}
+
+.screenshot-placeholder{
+  background-color: #ebebeb;
+  border-radius: 0.5rem;
+  display: inline-block;
+  margin: 0.5em 0.5em 0.5em 0;
+}

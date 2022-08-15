@@ -38,6 +38,7 @@ async function getData() {
   const plugins = Object.values(rawPluginsData).map((plugin) => {
     return {
       domId: convertToDomId(plugin.id),
+      downloadLink: `https://github.com/joplin/plugins/raw/master/plugins/${plugin.id}/plugin.jpl`,
       ...rawStats[plugin.id][plugin.version],
       ...plugin
     }
