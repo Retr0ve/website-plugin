@@ -65,6 +65,7 @@ async function getTrendingPlugins(plugins, topn){
     result.push({
       id: pluginId,
       downloadCount: downloadStat.downloads
+      // downloadCount: 1
     });
   }
 

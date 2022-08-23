@@ -1,5 +1,5 @@
 const config = {
-  mode: 'demo',
+  mode: 'dev',
   dev: {
     rootDir: './',
     distDir: './site',

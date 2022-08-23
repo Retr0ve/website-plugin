@@ -14,11 +14,12 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
     crossorigin="anonymous"></script>
+	<script type="module" src="search.js"></script>
+	<script src="shoppingCart.js"></script>
   <title>Joplin Plugins</title>
 </head>
 
 <body>
-<script type="module" src="search.js"></script>
 <nav class="navbar navbar-expand-lg bg-light sticky-top">
   <div class="container">
     <a class="navbar-brand" href=".">
@@ -45,6 +46,22 @@
           <input type="search" id="search" name="search" class="form-control search-input" placeholder="Search..." aria-label="Search" autocomplete="off">
         </form>
       </div>
+			<div class="btn dropdown">
+				<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<i class="fa-solid fa-cart-shopping"></i>
+				</a>
+				<ul id="plugin-cart" class="dropdown-menu dropdown-menu-start dropdown-menu-lg-end">
+					<div id="plugin-cart-action" class="px-3 pb-3 d-flex w-100 justify-content-between">
+						<button type="button" class="btn btn-primary w-50 me-2" onclick="downloadAll()"><i class="fa-solid fa-download"></i> Download All</button>
+						<button type="button" class="btn btn-outline-danger w-50" onclick="removeAll()"><i class="fa-solid fa-xmark"></i> Remove All</button>
+					</div>
+					<div id="plugin-cart-content">
+						<div class="m-4 plugin-cart">
+							You haven't added any plugin to your shopping cart.
+						</div>
+					</div>
+				</ul>
+			</div>
     </div>
   </div>
 </nav>
@@ -154,6 +171,7 @@
 </html>
 
 <script>
+
   function openTab(tab) {
 		if(tab === 'all'){
 			const triggerFirstTabEleList = document.querySelectorAll('#nav-tab :first-child')
@@ -167,4 +185,5 @@
 			openTab('all')
 		}
 	})
+
 </script>

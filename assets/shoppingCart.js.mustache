@@ -1,0 +1,85 @@
+let pluginCart = new Set();
+
+function convertToDomId(id) {
+  return id.toLowerCase().replace(/[.]/g, '-' )
+}
+
+async function togglePluginCart(e, id) {
+	e.preventDefault();
+	domId = convertToDomId(id);
+	console.log(domId);
+	if (document.querySelectorAll(`.${domId} p.plugin-action button i.fa-cart-plus`).length > 0) {
+		pluginCart.add(id);
+		document.querySelectorAll(`.${domId} p.plugin-action button i.fa-cart-plus`).forEach(element => {
+			element.classList.remove('fa-cart-plus');
+			element.classList.add('fa-trash-can');
+		});
+	} else {
+		pluginCart.delete(id);
+		document.querySelectorAll(`.${domId} p.plugin-action button i.fa-trash-can`).forEach(element => {
+			element.classList.remove('fa-trash-can');
+			element.classList.add('fa-cart-plus');
+		});
+	}
+	await updatePluginCart();
+}
+
+async function download(e, id){
+	const plugins = await fetch("/site/plugins.json").then(res => res.json());
+	const downloadLink = `https://github.com/joplin/plugins/releases/download/plugins/${id}@${plugins.raw.plugins[id].version}.jpl`
+	// window.open(downloadLink, '_blank');
+	
+	changeDownloadIcon(convertToDomId(id));
+	e.preventDefault();
+}
+
+function downloadAll() {
+	pluginCart.forEach(id => {
+		domId = convertToDomId(id);
+		document.querySelector(`.${domId} p.plugin-action a.download-btn`).click()
+	});
+	removeAll();
+}
+
+function removeAll() {
+	pluginCart.forEach(id => {
+		domId = convertToDomId(id);
+		console.log(`removing all - ${domId}`);
+		document.querySelector(`.${domId} p.plugin-action button.toggle-cart-btn`).click()
+	});
+}
+
+
+function changeDownloadIcon(domId) {
+	document.querySelectorAll(`.${domId} p.plugin-action a i.fa-download`).forEach(element => {
+		element.classList.remove('fa-download');
+		element.classList.add('fa-check');
+	});
+}
+
+async function updatePluginCart() {
+	const plugins = await fetch("{{&site}}/plugins.json").then(res => res.json());
+	const cartEle = document.getElementById('plugin-cart-content');
+	cartEle.innerHTML = '';
+	if (pluginCart.size > 0) {
+		pluginCart.forEach(pluginId => {
+			const cartItem = document.createElement('li');
+			cartItem.classList.add('plugin-cart-item');
+			const plugin = plugins.raw.plugins[pluginId];
+			cartItem.innerHTML = `
+			<div class="d-flex w-100 justify-content-between ps-4 pe-4 py-1">
+				<div class="wrap"> ${plugin.name} </div>
+				<div class="px-2" onClick="togglePluginCart(event, '${plugin.id}')">
+					<i class="fa-solid fa-xmark"></i>
+				</div>
+			</div>
+			`;
+			cartEle.appendChild(cartItem);
+		});
+	} else {
+		const emptyCartEle = document.createElement('div');
+		emptyCartEle.className = 'm-4 plugin-cart';
+		emptyCartEle.innerText = "You haven't added any plugin to your shopping cart.";
+		cartEle.appendChild(emptyCartEle);
+	}
+}
