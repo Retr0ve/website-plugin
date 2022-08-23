@@ -25,10 +25,6 @@ async function togglePluginCart(e, id) {
 }
 
 async function download(e, id){
-	const plugins = await fetch("/site/plugins.json").then(res => res.json());
-	const downloadLink = `https://github.com/joplin/plugins/releases/download/plugins/${id}@${plugins.raw.plugins[id].version}.jpl`
-	// window.open(downloadLink, '_blank');
-	
 	changeDownloadIcon(convertToDomId(id));
 	e.preventDefault();
 }
