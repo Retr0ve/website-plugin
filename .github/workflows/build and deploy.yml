@@ -3,9 +3,9 @@ name: Build and Deploy
 on:
   push:
     branches: [ "main" ]
-  schedule:
+#   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '*/30 * * * *'
+#     - cron:  '*/30 * * * *'
   workflow_dispatch:
   
 # Allow this job to clone the repo and create a page deployment
